@@ -27,6 +27,11 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
   <!-- =======================================================
   * Template Name: iPortfolio
   * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
@@ -34,6 +39,18 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+
+  <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
+<script type="text/javascript">
+   (function(){
+      emailjs.init({
+        publicKey: "oM1qdq9DZH54B0JEY",
+      });
+   })();
+</script>
+<script src="script.js"></script>
 </head>
 
 <body class="index-page">
@@ -743,39 +760,41 @@
           </div>
 
           <div class="col-lg-7">
-            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+            <form id="contact-form" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
               <div class="row gy-4">
-
-                <div class="col-md-6">
-                  <label for="name-field" class="pb-2">Your Name</label>
-                  <input type="text" name="name" id="name-field" class="form-control" required="">
-                </div>
-
-                <div class="col-md-6">
-                  <label for="email-field" class="pb-2">Your Email</label>
-                  <input type="email" class="form-control" name="email" id="email-field" required="">
-                </div>
-
-                <div class="col-md-12">
-                  <label for="subject-field" class="pb-2">Subject</label>
-                  <input type="text" class="form-control" name="subject" id="subject-field" required="">
-                </div>
-
-                <div class="col-md-12">
-                  <label for="message-field" class="pb-2">Message</label>
-                  <textarea class="form-control" name="message" rows="10" id="message-field" required=""></textarea>
-                </div>
-
-                <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
-
-                  <button type="submit">Send Message</button>
-                </div>
-
+          
+                  <div class="col-md-6">
+                      <label for="name-field" class="pb-2">Your Name</label>
+                      <input type="text" name="name" id="name-field" class="form-control" required="">
+                  </div>
+          
+                  <div class="col-md-6">
+                      <label for="email-field" class="pb-2">Your Email</label>
+                      <input type="email" class="form-control" name="email" id="email-field" required="">
+                  </div>
+          
+                  <div class="col-md-12">
+                      <label for="subject-field" class="pb-2">Subject</label>
+                      <input type="text" class="form-control" name="subject" id="subject-field" required="">
+                  </div>
+          
+                  <div class="col-md-12">
+                      <label for="message-field" class="pb-2">Message</label>
+                      <textarea class="form-control" name="message" rows="10" id="message-field" required=""></textarea>
+                  </div>
+          
+                  <div class="col-md-12 text-center">
+                      <div class="loading" style="display: none;">Loading</div>
+                      <div class="error-message"></div>
+                      <div class="sent-message" style="display: none;">Your message has been sent. Thank you!</div>
+          
+                      <button type="submit">Send Message</button>
+                  </div>
+          
               </div>
-            </form>
+          </form>
+        </div>
+          </form>
           </div><!-- End Contact Form -->
 
         </div>
@@ -823,6 +842,55 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <script>
+(function() {
+        emailjs.init("oM1qdq9DZH54B0JEY"); // Ganti dengan Public Key EmailJS kamu
+    })();
+
+    document.getElementById("contact-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        document.querySelector(".loading").style.display = "block";
+        document.querySelector(".sent-message").style.display = "none";
+        document.querySelector(".error-message").textContent = "";
+
+        const serviceID = "service_ztqs5ko"; // Ganti dengan Service ID EmailJS kamu
+        const templateID = "template_m0qyp4a"; // Ganti dengan Template ID EmailJS kamu
+
+        const formData = {
+            name: document.getElementById("name-field").value,
+            email: document.getElementById("email-field").value,
+            subject: document.getElementById("subject-field").value,
+            message: document.getElementById("message-field").value
+        };
+
+        emailjs.send(serviceID, templateID, formData)
+            .then(response => {
+                console.log("SUCCESS!", response);
+                document.querySelector(".loading").style.display = "none";
+                // Menampilkan SweetAlert untuk sukses
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Your message has been sent. Thank you!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                document.getElementById("contact-form").reset();
+            })
+            .catch(error => {
+                console.error("FAILED...", error);
+                document.querySelector(".loading").style.display = "none";
+                // Menampilkan SweetAlert untuk error
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to send message. Please try again!',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+    });
+</script>
 
 </body>
 
